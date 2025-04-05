@@ -687,7 +687,7 @@ def run_model(mask,input_path,showimgs=False,its=36,verbose=False):
         return connection_pixels > 0
 
     def process_images(folder_path, result_file):
-        """Process images to identify the top 10 with minimal connection overlap, then select top 5 with minimal total overlap."""
+        """Process images to identify the top 10 with minimal connection overlap, then calculate the optimal angle by different criterions."""
         no_overlap_files = [f for f in os.listdir(folder_path) if '2d_projection_no_overlap_' in f and f.endswith('.png')]
         overlap_files = [f for f in os.listdir(folder_path) if '2d_projection_overlap_' in f and f.endswith('.png')]
         
