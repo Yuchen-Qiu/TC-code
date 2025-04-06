@@ -45,6 +45,7 @@ optimizer.write_outputfile()
 
 Executing write_outputfile() generates a .txt file in a specified results folder using the following format:
 
+```bash
 --- VAS Model Results ---
 =Aneurysm [1/1]=
   - Final optimal DSA Rotation Angle (ρ): X°
@@ -61,5 +62,5 @@ Executing write_outputfile() generates a .txt file in a specified results folder
   Largest aneurysm:
     - Final optimal DSA Rotation Angle (ρ): X°
     - Final optimal DSA Angulation Angle (ψ): Y°
-
+```
 
