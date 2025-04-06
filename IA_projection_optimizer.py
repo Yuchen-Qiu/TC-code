@@ -211,7 +211,7 @@ class OptimalViewFinder:
                 file.write("No models were used on this data.")
         
         print(f"Saved txt file at {self.output_path}")
-        with open(self.output_path), 'r') as file:
+        with open(self.output_path, 'r') as file:
             filecontent = file.read()
 
         # Print the contents
