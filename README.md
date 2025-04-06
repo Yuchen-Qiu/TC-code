@@ -1,4 +1,4 @@
-# 🧠 Optimal Projection Angle Finder for Brain Aneurysms
+# Optimal Projection Angle Finder for Brain Aneurysms
 
 This project automatically determines the **optimal projection angle** for visualizing brain aneurysms in CT images. It leverages a combination of geometric analysis, image processing, and model-based scoring — including a **Visual Attention Simulation (VAS)** model and an **Iterative Observer** model — to find the angle that yields the clearest and most informative view.
 
