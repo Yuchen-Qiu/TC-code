@@ -21,13 +21,15 @@ This project automatically determines the **optimal projection angle** for visua
    cd aneurysm-angle-finder
 
 2. Install required dependencies:
-    pip install -r requirements.txt
+   ```bash
+   pip install -r requirements.txt
 
 ## 🧪 Usage
 You can run the angle optimization through a script or the provided Jupyter notebook. Implementing this software through a script could look like this:
 
 from aneurysm_angle_finder.angle_optimizer import AngleOptimizer
 
+```bash
 optimizer = AngleOptimizer(
     input_image="data/sample_case/image.nii.gz",
     input_mask="data/sample_case/mask.nii.gz"
@@ -37,27 +39,27 @@ optimizer.isolate_aneurysms()
 optimizer.run_VAS_model()
 optimizer.run_iterative_observer()
 optimizer.write_outputfile()
+```
 
 ## 📝 Output Format
+
 Executing write_outputfile() generates a .txt file in a specified results folder using the following format:
-RESULT OF AUTOMATIC PROJECTION ANGLE DETERMINATION VIA VIRTUAL ANEURYSM SPECTATOR (VAS) MODEL.
-===================================================================================
+
+--- VAS Model Results ---
 =Aneurysm [1/1]=
-Final optimal DSA Rotation Angle (ρ): X°
-Final optimal DSA Angulation Angle (ψ): Y°
-===================================================================================
-RESULT OF AUTOMATIC PROJECTION ANGLE DETERMINATION VIA ITERATIVE OBSERVER MODEL.
-===================================================================================
+  - Final optimal DSA Rotation Angle (ρ): X°
+  - Final optimal DSA Angulation Angle (ψ): Y°
+
+--- Iterative Observer Model Results ---
 =Aneurysm [1/1]=
-====================shortest_connection====================
-Final optimal DSA Rotation Angle (ρ): X°
-Final optimal DSA Angulation Angle (ψ): Y°
-====================longest_connection====================
-Final optimal DSA Rotation Angle (ρ): X°
-Final optimal DSA Angulation Angle (ψ): Y°
-====================largest_aneurysm====================
-Final optimal DSA Rotation Angle (ρ): X°
-Final optimal DSA Angulation Angle (ψ): Y°
-===================================================================================
+  Shortest connection:
+    - Final optimal DSA Rotation Angle (ρ): X°
+    - Final optimal DSA Angulation Angle (ψ): Y°
+  Longest connection:
+    - Final optimal DSA Rotation Angle (ρ): X°
+    - Final optimal DSA Angulation Angle (ψ): Y°
+  Largest aneurysm:
+    - Final optimal DSA Rotation Angle (ρ): X°
+    - Final optimal DSA Angulation Angle (ψ): Y°
 
 
