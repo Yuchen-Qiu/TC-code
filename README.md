@@ -3,8 +3,22 @@
 This project automatically determines the **optimal projection angle** for visualizing brain aneurysms in CT images. It leverages a combination of geometric analysis, image processing, and model-based scoring — including a **Visual Attention Simulation (VAS)** model and an **Iterative Observer** model — to find the angle that yields the clearest and most informative view.
 
 ## 📂 Folder Structure
-. ├── main.py ├── aneurysm_angle_finder/ │ ├── angle_optimizer.py │ ├── vas_model.py │ ├── observer_model.py │ └── utils/ ├── data/ │ └── sample_case/ │ ├── image.nii.gz │ └── mask.nii.gz ├── output/ │ └── Optimal_angle_results_*.txt └── README.md
-
+```bash
+.
+├── main.py
+├── aneurysm_angle_finder/
+│   ├── angle_optimizer.py
+│   ├── vas_model.py
+│   ├── observer_model.py
+│   └── utils/
+├── data/
+│   └── sample_case/
+│       ├── image.nii.gz
+│       └── mask.nii.gz
+├── output/
+│   └── Optimal_angle_results_*.txt
+└── README.md
+```
 
 ## 🧠 How It Works
 
