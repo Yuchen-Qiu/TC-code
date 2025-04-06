@@ -8,9 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import json
 import SimpleITK as sitk
-import modified_vdWeide_model
+import Virtual_Aneurysm_Spectator_Model
 import iterative_observer_model
 
 class OptimalViewFinder:
@@ -21,7 +20,7 @@ class OptimalViewFinder:
     Loads a NIfTI file.
     Isolates aneurysms in the segmentation mask.
     Determines optimal projection angle of intercranial aneurysm via DSA.
-    Supports two models (modified vdWeide + iterative observer).
+    Supports two models (virtual aneurysm spectator (VAS) + iterative observer).
     Writes results to output file
     
     Attributes:
@@ -31,16 +30,16 @@ class OptimalViewFinder:
     metadata (str):                             Header of the input NIFTI file.
     vasculature_array (np.array):               Numpy array that contains the segmentation mask of the vasculature.
     isolated_anuerysms:                         List of numpy arrays that contains the segmentation of isolated aneurysms.
-    self.ran_vdweide (boolean):                 Checks if modified vdweide model has been used.
+    self.ran_VAS (boolean):                     Checks if VAS model has been used.
     self.ran_itobs (boolean):                   Checks if iterative observer model has been used.
-    self.vdWeide_output_text (str):             String variable that contains all results from the modified vdWeide model.
+    self.VAS_output_text (str):                 String variable that contains all results from the VAS model.
     self.iterative_observer_output_text (str:)  String variable that contains all results from the iterative observer model.   
 
     Methods:
-    isolate_aneurysms(verbose=False): Identifies and isolates aneurysms in the mask.
-    run_modified_vdWeide_model:       Runs modified vdWeide model on all isolated aneurysms.
-    run_iterative_observer_model:     Runs iterative observer model on all isolated aneurysms.
-    write_outputfile:                 Writes all generated results to output txt file.
+    isolate_aneurysms(verbose=False):           Identifies and isolates aneurysms in the mask.
+    run_modified_VAS_model:                     Runs modified VAS model on all isolated aneurysms.
+    run_iterative_observer_model:               Runs iterative observer model on all isolated aneurysms.
+    write_outputfile:                           Writes all generated results to output txt file.
 
     """
     
@@ -54,7 +53,7 @@ class OptimalViewFinder:
         self.maskimg = nii_file.get_fdata()
         self.metadata = nii_file.header
 
-        self.ran_vdweide = False
+        self.ran_VAS = False
         self.ran_itobs = False
 
         print(f"OptimalviewFinder succesfully initialized, using input: {self.input_path}")
@@ -102,11 +101,11 @@ class OptimalViewFinder:
 
         return self.isolated_aneurysms
 
-    def run_modified_vdWeide_model(self, verbose=False):
+    def run_VAS_model(self, verbose=False):
         """
-        Function that implements the modified vdWeide model found in modified_vdWeide_model.py, to find optimal projection angles of 
-        an intercranial aneurysm by analysis of a segmented 3D CTA image. Returns both rotation angle ρ and angulation angle ψ to be 
-        used inside a DSA machine. Exporting results via write_outputfile function.
+        Function that implements the virtual aneurysm spectator (VAS) model found in Virtual_Aneurysm_Spectator_Model.py, 
+        to find optimal projection angles of an intercranial aneurysm by analysis of a segmented 3D CTA image. Returns 
+        both rotation angle ρ and angulation angle ψ to be used inside a DSA machine. Exporting results via write_outputfile function.
         
         Input variables:
         verbose:            Boolean operator that determines if progress print statements are shown in the kernel or not.
@@ -115,26 +114,26 @@ class OptimalViewFinder:
         None
         """
         
-        self.vdWeide_output_text = f"RESULT OF AUTOMATIC PROJECTION ANGLE DETERMINATION VIA MODIFIED VDWEIDE MODEL.\n"
-        self.vdWeide_output_text += f"===================================================================================\n"
+        self.VAS_output_text = f"RESULT OF AUTOMATIC PROJECTION ANGLE DETERMINATION VIA VIRTUAL ANEURYSM SPECTATOR (VAS) MODEL.\n"
+        self.VAS_output_text += f"===================================================================================\n"
         
         for nr, segmentation in enumerate(self.isolated_aneurysms):
             print(f"Running model for Aneurysm [{nr+1}/{len(self.isolated_aneurysms)}]")
             
-            #Running the modified vdWeide model for every isolated aneurysm in self.isolated aneurysms
-            rho_deg, psi_deg = modified_vdWeide_model.run_model(segmentation,verbose=verbose)    
+            #Running the VAS model for every isolated aneurysm in self.isolated aneurysms
+            rho_deg, psi_deg = Virtual_Aneurysm_Spectator_Model.run_model(segmentation,verbose=verbose)    
             
             #Adds results to result string variable
-            self.vdWeide_output_text += f"=Aneurysm [{nr+1}/{len(self.isolated_aneurysms)}]=\n"
-            self.vdWeide_output_text += f"Final optimal DSA Rotation Angle (ρ): {rho_deg}°\n"
-            self.vdWeide_output_text += f"Final optimal DSA Angulation Angle (ψ): {psi_deg}°\n"
-            self.vdWeide_output_text += f"===================================================================================\n"
+            self.VAS_output_text += f"=Aneurysm [{nr+1}/{len(self.isolated_aneurysms)}]=\n"
+            self.VAS_output_text += f"Final optimal DSA Rotation Angle (ρ): {rho_deg}°\n"
+            self.VAS_output_text += f"Final optimal DSA Angulation Angle (ψ): {psi_deg}°\n"
+            self.VAS_output_text += f"===================================================================================\n"
         
         print("===================================================================================")
-        print(self.vdWeide_output_text)
+        print(self.VAS_output_text)
         
         #Updates variable if model has been used
-        self.ran_vdweide = True
+        self.ran_VAS = True
 
     def run_iterative_observer_model(self,showimgs=False,its=36,verbose=False):
         """
@@ -176,14 +175,14 @@ class OptimalViewFinder:
     
     def write_outputfile(self,output_folder=None):
         """
-        Function that writes the results of the modified vdWeide model and iterative observer model inside of a txt file.
+        Function that writes the results of the VAS model and iterative observer model inside of a txt file.
         Note: If no models were ran before executing this function, an empty results file will be generated.
         
         Input variables:
         output_folder:      Str variable that contains the path to the folder in which the output should be saved.
 
         Output variables:
-        file:               .txt file that contains the outputstrings of both the modified vdWeide model as the iterative observer model
+        file:               .txt file that contains the outputstrings of both the VAS model as the iterative observer model
                             (only when applicable)
         """
        
@@ -194,19 +193,26 @@ class OptimalViewFinder:
             self.output_folder = output_folder
         
         #If specified output_folder does not exist, it creates it.
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
+        if not os.path.exists(self.output_folder):
+            os.makedirs(self.output_folder)
         
         #Determines final output path
         self.output_path = self.output_folder+f"/Optimal_angle_ results_{os.path.basename(self.input_path)}.txt"
 
         #Writes results to file
         with open(self.output_path, 'w', encoding='utf-8') as file:
-            if self.ran_vdweide:
-                file.write(self.vdWeide_output_text)
+            if self.ran_VAS:
+                file.write(self.VAS_output_text)
             
             if self.ran_itobs:
                 file.write(self.iterative_observer_output_text)
             
-            if not (self.ran_vdweide and self.ran_itobs):
+            if not (self.ran_VAS and self.ran_itobs):
                 file.write("No models were used on this data.")
+        
+        print(f"Saved txt file at {self.output_path}")
+        with open(self.output_path), 'r') as file:
+            filecontent = file.read()
+
+        # Print the contents
+        print(f"File content [{filecontent}]")
