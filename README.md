@@ -27,8 +27,7 @@ from aneurysm_angle_finder.angle_optimizer import AngleOptimizer
 
 ```bash
 optimizer = AngleOptimizer(
-    input_image="data/sample_case/image.nii.gz",
-    input_mask="data/sample_case/mask.nii.gz"
+    input_path="data/sample_case/mask.nii.gz"
 )
 
 optimizer.isolate_aneurysms()
